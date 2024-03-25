@@ -1,87 +1,124 @@
-package com.hexaware.main;
+package com.hexaware.controller;
 
-import java.util.InputMismatchException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-import com.hexaware.controller.PolicyServiceImpl;
 import com.hexaware.dao.IPolicyService;
+import com.hexaware.dao.PolicyDao;
 import com.hexaware.entity.Policy;
+import com.hexaware.exception.PolicyNotFoundException;
 
-public class MainClass {
+public class PolicyServiceImpl implements IPolicyService {
 	
-public static void main(String[] args) {
-	
-	IPolicyService ips = new PolicyServiceImpl();
-	
-	Scanner sc= new Scanner(System.in);
-	String ch = null;
-	do {
-		try {
-		System.out.println("Enter your choice :");
-		System.out.println("1.Create Policy");
-		System.out.println("2.Get Policy");
-		System.out.println("3.Get All Policies");
-		System.out.println("4.Update Policy");
-		System.out.println("5.Delete Policy");
-		int choice = sc.nextInt();
-		switch(choice) {
+	Policy pol;
+	List<Policy> polist = new ArrayList<Policy>();
+	PolicyDao dao = new PolicyDao();
+	Scanner sc = new Scanner(System.in);
+
+	@Override
+	public boolean createPolicy(Policy policy) {
 		
+		pol = new Policy();
 		
-		case 1:
-			Policy policy = new Policy();
-			System.out.println("Enter Policy Id:");
-            policy.setPolicyId(sc.nextInt());
-            System.out.println("Enter User Id:");
-            policy.setUserId(sc.nextInt());
-            System.out.println("Enter Client Id:");
-            policy.setClientId(sc.nextInt());
-            System.out.println("Enter Claim Id:");
-            policy.setClaimId(sc.nextInt());
-            System.out.println("Enter Policy Name:");
-            policy.setPolicyName(sc.next());
-            System.out.println("Enter Payment Id:");
-            policy.setPaymentId(sc.nextInt());
-            System.out.println("Enter Policy Premium:");
-            policy.setPolicyPremium(sc.nextDouble());
-			ips.createPolicy(policy);
-			break;
+		System.out.println("Enter Policy Id :");
+		int policyId = sc.nextInt();
+		pol.setPolicyId(policyId);
 		
-		case 2:
-			System.out.println("Enter the policy ID:");
-		    int policyId = sc.nextInt();
-		    ips.getPolicy(policyId);
-		    break;
+		System.out.println("Enter User Id :");
+		int userId = sc.nextInt();
+		pol.setUserId(userId);
 		
-		case 3:
-			ips.getAllPolicies();
-	    	break;
+		System.out.println("Enter Client Id :");
+		int clientId = sc.nextInt();
+		pol.setClientId(clientId);
+
+		System.out.println("Enter Claim Id :");
+		int claimId = sc.nextInt();
+		pol.setClaimId(claimId);
 		
-		case 4:
-			System.out.println("Enter the policy ID you want to update:");
-            int policyId1 = sc.nextInt();
-            Policy updatedPolicy = new Policy();
-            ips.updatePolicy(updatedPolicy);
-            break;
+		System.out.println("Enter Policy Name :");
+		String policyName = sc.next();
+		pol.setPolicyName(policyName);
 		
-		case 5:
-			System.out.println("Enter policy ID you want to delete:");
-            int policyId2 = sc.nextInt();
-            ips.deletePolicy(policyId2);
-            break;
+		System.out.println("Enter Payment Id :");
+		int paymentId = sc.nextInt();
+		pol.setPaymentId(paymentId);
 		
-		default: 
-			System.out.println("Enter the right choice. ");
-		}
+		System.out.println("Enter Policy Premium :");
+		double policyPremium = sc.nextDouble();
+		pol.setPolicyPremium(policyPremium);
 		
-		System.out.println("Do you want to continue? Y or y");
-		ch = sc.next();
-	}catch (InputMismatchException e) {
-		 System.out.println("Invalid input. Please enter a valid integer choice.");
-         sc.next();
-         ch = "Y";
+		dao.createPolicy(pol);
+        System.out.println("Policy created successfully.");
+		return false;
+		
 	}
-}while (ch.equals("Y") || ch.equals("y"));
-    System.out.println("Thanks for using our system !!!");
-    System.exit(0);
-}
+
+	@Override
+	public Policy getPolicy(int policyId) {
+		try {
+		      return dao.getPolicy(policyId);
+		    } catch ( PolicyNotFoundException e) {
+		        System.out.println(e.getMessage());
+		        return null;
+		    }
+		}
+
+	@Override
+	public List<Policy> getAllPolicies() {
+		polist = dao.showPolicies();
+	    for (Policy policy : polist) {
+	        System.out.println(policy); 
+	    }
+	    return polist;
+		
+	}
+
+	@Override
+	public boolean updatePolicy(Policy policy) {
+		try {
+			
+			System.out.println("Enter Policy ID to update:");
+            int policyId = sc.nextInt();
+            
+            System.out.println("Enter User ID to update:");
+            int userId = sc.nextInt();
+            
+            System.out.println("Enter Client ID to update:");
+            int clientId = sc.nextInt();
+            
+            System.out.println("Enter claim ID to update:");
+            int claimId = sc.nextInt();
+            
+            System.out.println("Enter Policy name to update:");
+            String policyName = sc.next();
+            
+            System.out.println("Enter Payment ID to update:");
+            int paymentId = sc.nextInt();
+            
+            System.out.println("Enter policy premium to update:");
+            double policyPremium = sc.nextDouble();
+            
+            Policy updatedPolicy = new Policy(userId, clientId, claimId, policyId, policyName, paymentId, policyPremium);
+            return dao.updatePolicy(updatedPolicy);
+		}catch(NumberFormatException e) {
+			System.out.println("Invalid input. Please enter a valid number.");
+            return false;
+		}
+	}
+
+	@Override
+	public boolean deletePolicy(int policyId) {
+		
+		try {
+            System.out.println("Enter Policy ID to delete:");
+            int policyId1 = sc.nextInt();            
+            return dao.deletePolicy(policyId1);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+            return false;
+		
+			}
+	}
 }
