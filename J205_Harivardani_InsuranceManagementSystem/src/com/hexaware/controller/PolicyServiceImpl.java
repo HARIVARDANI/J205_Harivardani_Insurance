@@ -50,7 +50,7 @@ public class PolicyServiceImpl implements IPolicyService {
 		pol.setPolicyPremium(policyPremium);
 		
 		dao.createPolicy(pol);
-        System.out.println("Policy created successfully.");
+                System.out.println("Policy created successfully.");
 		return false;
 		
 	}
@@ -79,7 +79,7 @@ public class PolicyServiceImpl implements IPolicyService {
 	public boolean updatePolicy(Policy policy) {
 		try {
 			
-			System.out.println("Enter Policy ID to update:");
+	    System.out.println("Enter Policy ID to update:");
             int policyId = sc.nextInt();
             
             System.out.println("Enter User ID to update:");
@@ -100,9 +100,9 @@ public class PolicyServiceImpl implements IPolicyService {
             System.out.println("Enter policy premium to update:");
             double policyPremium = sc.nextDouble();
             
-            Policy updatedPolicy = new Policy(userId, clientId, claimId, policyId, policyName, paymentId, policyPremium);
+            Policy updatedPolicy = new Policy(policyId,userId, clientId, claimId, policyName, paymentId, policyPremium);
             return dao.updatePolicy(updatedPolicy);
-		}catch(NumberFormatException e) {
+	    }catch(NumberFormatException e) {
 			System.out.println("Invalid input. Please enter a valid number.");
             return false;
 		}
@@ -111,14 +111,14 @@ public class PolicyServiceImpl implements IPolicyService {
 	@Override
 	public boolean deletePolicy(int policyId) {
 		
-		try {
+	    try {
             System.out.println("Enter Policy ID to delete:");
             int policyId1 = sc.nextInt();            
             return dao.deletePolicy(policyId1);
-        } catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid number.");
             return false;
 		
-			}
+	}
 	}
 }
