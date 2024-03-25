@@ -21,7 +21,7 @@ public class PolicyDao {
 	
 	public boolean createPolicy(Policy pol) {
         try {
-            con = DBUtil.getDBConn(); // Get database connection
+            con = DBUtil.getDBConn(); 
             PreparedStatement ps = con.prepareStatement("INSERT INTO Policy (policyId,userId, clientId, claimId,policyName, paymentId, policyPremium) " 
             + " VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setInt(1, pol.getPolicyId());
@@ -87,15 +87,15 @@ public class PolicyDao {
         stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM Policy");
 		while(rs.next()) {
-			Policy policy = new Policy();
-			    policy.setPolicyId(rs.getInt(1));
-	            policy.setUserId(rs.getInt(2));
-	            policy.setClientId(rs.getInt(3));
-	            policy.setClaimId(rs.getInt(4));
-	            policy.setPolicyName(rs.getString(5));
-	            policy.setPaymentId(rs.getInt(6));
-	            policy.setPolicyPremium(rs.getDouble(7));
-	         policies.add(policy);   
+		Policy policy = new Policy();
+		policy.setPolicyId(rs.getInt(1));
+	        policy.setUserId(rs.getInt(2));
+	        policy.setClientId(rs.getInt(3));
+	        policy.setClaimId(rs.getInt(4));
+	        policy.setPolicyName(rs.getString(5));
+	        policy.setPaymentId(rs.getInt(6));
+	        policy.setPolicyPremium(rs.getDouble(7));
+	        policies.add(policy);   
 		}
 	}catch (SQLException e) {
 		
